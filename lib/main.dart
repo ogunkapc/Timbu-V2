@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
-import 'package:timbu/model/product_provider.dart';
-import 'package:timbu/screens/splash_screen.dart';
-import 'package:timbu/service/api_service.dart';
+import 'package:timbu_v2/model/product_provider.dart';
+import 'package:timbu_v2/screens/mainscreen/main_screen.dart';
+import 'package:timbu_v2/service/api_service.dart';
 
 void main() {
   runApp(const MyApp());
@@ -18,11 +19,11 @@ class MyApp extends StatelessWidget {
       child: MaterialApp(
         title: 'Timbu',
         theme: ThemeData(
-          colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+          textTheme: GoogleFonts.poppinsTextTheme(),
           useMaterial3: true,
         ),
         debugShowCheckedModeBanner: false,
-        home: const SplashScreen(),
+        home: const MainScreen(),
       ),
     );
   }

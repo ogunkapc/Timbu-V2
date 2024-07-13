@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:timbu/model/product.dart';
-import 'package:timbu/service/api_service.dart';
+import 'package:timbu_v2/model/product.dart';
+import 'package:timbu_v2/service/api_service.dart';
 
 class ProductProvider extends ChangeNotifier {
   final TimbuApi api;

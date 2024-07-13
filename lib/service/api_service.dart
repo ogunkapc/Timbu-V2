@@ -1,8 +1,8 @@
 import 'dart:convert';
 
 import 'package:http/http.dart' as http;
-import 'package:timbu/keys.dart';
-import 'package:timbu/model/product.dart';
+import 'package:timbu_v2/keys.dart';
+import 'package:timbu_v2/model/product.dart';
 
 class TimbuApi {
   static const String baseUrl = 'https://api.timbu.cloud/products';
