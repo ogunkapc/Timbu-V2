@@ -4,42 +4,25 @@ import 'package:timbu_v2/service/api_service.dart';
 
 class ProductProvider extends ChangeNotifier {
   final TimbuApi api;
-  bool isLoading = false;
-  String _errorMessage = '';
-
   ProductProvider({required this.api});
 
+  bool isLoading = false;
+  String _errorMessage = '';
   List<Product> productsList = [];
-  // list of products in the cart
-  List<Product> userCartItems = [];
+  List<Product> filteredProductsList = [];
+  List<Product> recentlyViewedProducts = [];
 
   // get list of products
   List<Product> getProductsList() {
     return productsList;
   }
 
-  // get cart
-  List<Product> getUserCartItems() {
-    return userCartItems;
+  List<Product> getFilteredProductsList() {
+    return filteredProductsList;
   }
 
   bool getIsLoading() {
     return isLoading;
-  }
-
-  // Add to cart
-  void addToCart(Product product) {
-    userCartItems.add(product);
-  }
-
-  // Remove from cart
-  void removeFromCart(Product product) {
-    userCartItems.remove(product);
-  }
-
-  // clear cart
-  void clearCart() {
-    userCartItems.clear();
   }
 
   String get errorMessage => _errorMessage;
@@ -47,16 +30,62 @@ class ProductProvider extends ChangeNotifier {
   // fetch products from API
   Future<void> fetchProducts() async {
     isLoading = true;
-    _errorMessage = "";
     notifyListeners();
 
     try {
       productsList = await api.fetchProducts();
+      // initially show all products
+      filteredProductsList = productsList;
+      // Debugging prints
+      print('Fetched Products: ${productsList.length}');
+      for (var product in productsList) {
+        print(
+            'Product: ${product.name}, Categories: ${product.categories.map((c) => c.name).join(', ')}');
+      }
     } catch (e) {
       _errorMessage = e.toString();
     } finally {
       isLoading = false;
       notifyListeners();
     }
+  }
+
+  List<Product> filterProductsByCategory(String categoryName) {
+    return productsList.where((product) {
+      return product.categories.any((category) => category.name == categoryName);
+    }).toList();
+  }
+
+  List<Product> getRecentlyViewedProductsByCategory(String categoryName) {
+    return recentlyViewedProducts.where((product) {
+      return product.categories.any((category) => category.name == categoryName);
+    }).toList();
+  }
+
+  // this method is called when a product is viewed
+  void addRecentlyViewedProduct(Product product) {
+    recentlyViewedProducts.add(product);
+    notifyListeners();
+  }
+
+  // Filtering methods for sections
+  List<Product> getJustForYou() {
+    return filterProductsByCategory('just for you');
+  }
+
+  List<Product> getDeals() {
+    return filterProductsByCategory('deals');
+  }
+
+  List<Product> getOurCollections() {
+    return filterProductsByCategory('our collections');
+  }
+
+  List<Product> getYouMightLike() {
+    return filterProductsByCategory('you might like');
+  }
+
+  List<Product> getRecentlyViewed() {
+    return recentlyViewedProducts;
   }
 }

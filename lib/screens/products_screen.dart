@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:timbu/model/product_provider.dart';
-import 'package:timbu/screens/product_detail_screen.dart';
-import 'package:timbu/util/constants/color_constants.dart';
-import 'package:timbu/util/widgets/item_card.dart';
+import 'package:timbu_v2/model/product_provider.dart';
+import 'package:timbu_v2/screens/product_detail_screen.dart';
+import 'package:timbu_v2/util/constants/color_constants.dart';
+import 'package:timbu_v2/util/widgets/item_card.dart';
 
 class ProductsScreen extends StatefulWidget {
   const ProductsScreen({super.key});
@@ -31,7 +31,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     return Scaffold(
-      backgroundColor: ColorConstants.whiteColor,
+      backgroundColor: ColorConstants.neutralWhite,
       body: Consumer<ProductProvider>(builder: (context, value, child) {
         final productList = value.getProductsList();
         if (value.getIsLoading()) {
@@ -61,9 +61,9 @@ class _ProductsScreenState extends State<ProductsScreen> {
                           gridDelegate:
                               SliverGridDelegateWithFixedCrossAxisCount(
                             crossAxisCount: size.width >= 500 ? 4 : 2,
-                            childAspectRatio: size.width >= 500 ? 0.54 : 0.54,
-                            mainAxisSpacing: 20,
-                            crossAxisSpacing: 20,
+                            childAspectRatio: size.width >= 500 ? 0.54 : 0.7,
+                            mainAxisSpacing: 32,
+                            crossAxisSpacing: 15,
                           ),
                           itemBuilder: (context, index) {
                             return ItemCard(

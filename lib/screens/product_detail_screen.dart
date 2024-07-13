@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:timbu/model/product.dart';
-import 'package:timbu/util/constants/color_constants.dart';
+import 'package:timbu_v2/model/product.dart';
+import 'package:timbu_v2/util/constants/color_constants.dart';
+import 'package:timbu_v2/util/constants/image_constants.dart';
 
 class ProductDetail extends StatelessWidget {
   final Product product;
@@ -12,24 +13,36 @@ class ProductDetail extends StatelessWidget {
     Size size = MediaQuery.of(context).size;
 
     return Scaffold(
-      backgroundColor: ColorConstants.lightGreyColor,
-      appBar: AppBar(
-        backgroundColor: ColorConstants.whiteColor,
-        elevation: 0,
-        title: Text(
-          product.name,
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
-            fontSize: 20,
-            color: ColorConstants.primaryColor,
+      backgroundColor: ColorConstants.neutralWhite,
+      body: SafeArea(
+        child: SingleChildScrollView(
+          child: Stack(
+            children: [
+              size.width >= 600
+                  ? buildLargeScreenProductView(size)
+                  : buildSmallScreenProductView(size),
+              Padding(
+                padding: const EdgeInsets.all(30),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.pop(context);
+                      },
+                      child: CircleAvatar(
+                        backgroundColor: ColorConstants.neutralWhite,
+                        radius: 15.27,
+                        child: Image.asset(ImageConstants.backIcon),
+                      ),
+                    ),
+                    Image.asset(ImageConstants.cartIcon),
+                  ],
+                ),
+              ),
+            ],
           ),
         ),
-        centerTitle: true,
-      ),
-      body: SingleChildScrollView(
-        child: size.width >= 600
-            ? buildLargeScreenProductView(size)
-            : buildSmallScreenProductView(size),
       ),
       bottomNavigationBar: buildBottomNavBar(context),
     );
@@ -53,49 +66,53 @@ class ProductDetail extends StatelessWidget {
                   ),
           ),
         ),
-        Container(
-          decoration: const BoxDecoration(
-            borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(24),
-              topRight: Radius.circular(24),
-            ),
-          ),
-          child: Padding(
-            padding: const EdgeInsets.all(20),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  product.name,
-                  style: TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.w700,
-                    color: ColorConstants.black50,
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 30),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    "uniqueId",
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w300,
+                      color: ColorConstants.grey700,
+                    ),
                   ),
+                  Text(
+                    "In Stock",
+                    style: TextStyle(
+                      fontSize: 14,
+                      color: ColorConstants.green,
+                    ),
+                  )
+                ],
+              ),
+              const SizedBox(
+                height: 30,
+              ),
+              Text(
+                product.name,
+                style: const TextStyle(
+                  fontSize: 24,
+                  fontWeight: FontWeight.w600,
+                  color: ColorConstants.baseBlack,
                 ),
-                const SizedBox(
-                  height: 10,
+              ),
+              const SizedBox(
+                height: 20,
+              ),
+              Text(
+                product.description,
+                style: TextStyle(
+                  fontSize: 14,
+                  color: ColorConstants.black50,
                 ),
-                Text(
-                  "NGN ${product.currentPrice.toString()}",
-                  style: TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.w700,
-                    color: ColorConstants.primaryColor,
-                  ),
-                ),
-                const SizedBox(
-                  height: 20,
-                ),
-                Text(
-                  product.description,
-                  style: TextStyle(
-                    fontSize: 17.5,
-                    color: ColorConstants.black50,
-                  ),
-                ),
-              ],
-            ),
+              ),
+            ],
           ),
         )
       ],
@@ -124,49 +141,53 @@ class ProductDetail extends StatelessWidget {
           ),
         ),
         Expanded(
-          child: Container(
-            decoration: const BoxDecoration(
-              borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(24),
-                topRight: Radius.circular(24),
-              ),
-            ),
-            child: Padding(
-              padding: const EdgeInsets.all(20),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    product.name,
-                    style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.w700,
-                      color: ColorConstants.black50,
+          child: Padding(
+            padding: const EdgeInsets.all(20),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      "uniqueId",
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w300,
+                        color: ColorConstants.grey700,
+                      ),
                     ),
+                    Text(
+                      "In Stock",
+                      style: TextStyle(
+                        fontSize: 14,
+                        color: ColorConstants.green,
+                      ),
+                    )
+                  ],
+                ),
+                const SizedBox(
+                  height: 30,
+                ),
+                Text(
+                  product.name,
+                  style: const TextStyle(
+                    fontSize: 24,
+                    fontWeight: FontWeight.w600,
+                    color: ColorConstants.baseBlack,
                   ),
-                  const SizedBox(
-                    height: 10,
+                ),
+                const SizedBox(
+                  height: 20,
+                ),
+                Text(
+                  product.description,
+                  style: TextStyle(
+                    fontSize: 17.5,
+                    color: ColorConstants.black50,
                   ),
-                  Text(
-                    "NGN ${product.currentPrice.toString()}",
-                    style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.w700,
-                      color: ColorConstants.primaryColor,
-                    ),
-                  ),
-                  const SizedBox(
-                    height: 20,
-                  ),
-                  Text(
-                    product.description,
-                    style: TextStyle(
-                      fontSize: 17.5,
-                      color: ColorConstants.black50,
-                    ),
-                  ),
-                ],
-              ),
+                ),
+              ],
             ),
           ),
         )
@@ -177,32 +198,45 @@ class ProductDetail extends StatelessWidget {
   Widget buildBottomNavBar(BuildContext context) {
     return BottomAppBar(
       // height: 70,
-      color: ColorConstants.whiteColor,
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 20.0),
-        child: Center(
-          child: GestureDetector(
-            onTap: () {
-              addToCart(context);
-            },
-            child: Container(
-              padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(16),
-                color: ColorConstants.primaryColor,
-              ),
-              child: Text(
-                "Add to cart",
-                style: TextStyle(
-                  color: ColorConstants.whiteColor,
-                  fontSize: 20,
-                  fontWeight: FontWeight.w600,
+      color: ColorConstants.neutralWhite,
+      child: Row(
+        children: [
+          Text(
+            "NGN ${product.currentPrice.toString()}",
+            style: TextStyle(
+              fontSize: 20,
+              fontWeight: FontWeight.w700,
+              color: ColorConstants.primaryColor,
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20.0),
+            child: Center(
+              child: GestureDetector(
+                onTap: () {
+                  addToCart(context);
+                },
+                child: Container(
+                  padding:
+                      const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(16),
+                    color: ColorConstants.primaryColor,
+                  ),
+                  child: const Text(
+                    "Add to cart",
+                    style: TextStyle(
+                      color: ColorConstants.neutralWhite,
+                      fontSize: 20,
+                      fontWeight: FontWeight.w600,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
                 ),
-                textAlign: TextAlign.center,
               ),
             ),
           ),
-        ),
+        ],
       ),
     );
   }

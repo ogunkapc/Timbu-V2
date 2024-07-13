@@ -18,11 +18,11 @@ class ImageConstants {
   static String homeIcon = "$iconPath/home.png";
   static String profileIcon = "$iconPath/user.png";
   static String searchIcon = "$iconPath/search.png";
-  
+
   static String backIcon = "$iconPath/arrow_left.png";
   static String chevronDown = "$iconPath/chevron_down.png";
 
   static String cartIcon = "$iconPath/shopping_cart.png";
+  static String filledCart = "$iconPath/shopping_cart_filled.png";
   static String deleteIcon = "$iconPath/trash.png";
-
 }

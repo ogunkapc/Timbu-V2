@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:timbu/model/product.dart';
-import 'package:timbu/util/constants/color_constants.dart';
+import 'package:timbu_v2/model/product.dart';
+import 'package:timbu_v2/util/constants/color_constants.dart';
 
 class ItemCard extends StatelessWidget {
   final Product product;
@@ -16,29 +16,24 @@ class ItemCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: onTap,
-      child: Container(
-        decoration: BoxDecoration(
-          color: ColorConstants.backgroundColor,
-          borderRadius: BorderRadius.circular(16),
-          border: Border.all(
-            color: Colors.grey.withOpacity(0.3),
-          ),
-        ),
+      child: SizedBox(
+        height: 210,
+        width: 160,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Container(
-              height: 200,
-              padding: const EdgeInsets.all(15),
+              height: 150,
+              width: 160,
               decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(16),
+                borderRadius: BorderRadius.circular(5.45),
               ),
               child: Hero(
                 tag: product.id,
                 child: product.photos.isNotEmpty
                     ? Image.network(
                         product.photos.first,
-                        fit: BoxFit.fitHeight,
+                        fit: BoxFit.fill,
                       )
                     : const Icon(
                         Icons.warning,
@@ -48,35 +43,59 @@ class ItemCard extends StatelessWidget {
               ),
             ),
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+              padding: const EdgeInsets.only(top: 10),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(
-                    product.name,
-                    maxLines: 3,
-                    overflow: TextOverflow.ellipsis,
-                    style: TextStyle(
-                      fontSize: 17,
-                      fontWeight: FontWeight.w600,
-                      color: ColorConstants.black50,
+                  SizedBox(
+                    width: 80,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          product.name,
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                          style: const TextStyle(
+                            fontSize: 12,
+                            fontWeight: FontWeight.w400,
+                            color: ColorConstants.neutral600,
+                          ),
+                        ),
+                        const SizedBox(
+                          height: 10,
+                        ),
+                        Text(
+                          product.currentPrice != null
+                              ? "NGN ${product.currentPrice.toString()}"
+                              : "price unavailable",
+                          style: const TextStyle(
+                            fontSize: 12,
+                            fontWeight: FontWeight.w600,
+                            color: ColorConstants.neutral800,
+                          ),
+                        ),
+                      ],
                     ),
                   ),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  // product price
-
-                  Text(
-                    product.currentPrice != null
-                        ? "NGN ${product.currentPrice.toString()}"
-                        : "price unavailable",
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w700,
-                      color: ColorConstants.primaryColor,
+                  Container(
+                    height: 24,
+                    width: 60,
+                    decoration: BoxDecoration(
+                      border:
+                          Border.all(color: ColorConstants.green, width: 0.79),
+                      borderRadius: BorderRadius.circular(2.37),
                     ),
-                  ),
+                    child: const Center(
+                      child: Text(
+                        "Add to Cart",
+                        style: TextStyle(
+                          fontSize: 9,
+                          color: ColorConstants.green,
+                        ),
+                      ),
+                    ),
+                  )
                 ],
               ),
             ),
