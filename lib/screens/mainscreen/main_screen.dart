@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:timbu_v2/screens/mainscreen/pages/checkout_screen.dart';
 import 'package:timbu_v2/screens/mainscreen/pages/home_screen.dart';
-import 'package:timbu_v2/screens/mainscreen/pages/products_screen.dart';
+import 'package:timbu_v2/screens/mainscreen/pages/wish_list.dart';
 import 'package:timbu_v2/screens/mainscreen/pages/search_screen.dart';
 import 'package:timbu_v2/util/constants/color_constants.dart';
 import 'package:timbu_v2/util/constants/image_constants.dart';
@@ -17,7 +17,7 @@ class _MainScreenState extends State<MainScreen> {
   int _selectedIndex = 0;
   final List _pages = [
     const HomeScreen(),
-    const ProductsScreen(),
+    const WishlistScreen(),
     const CheckoutScreen(),
     const SearchScreen(),
   ];
