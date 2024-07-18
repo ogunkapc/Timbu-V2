@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:timbu_v2/util/constants/color_constants.dart';
 import 'package:timbu_v2/util/widgets/search_box.dart';
 
@@ -7,16 +8,16 @@ class SearchScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
+    return Scaffold(
       backgroundColor: ColorConstants.neutralWhite,
       body: SafeArea(
         child: Padding(
-          padding: EdgeInsets.all(10.0),
+          padding: const EdgeInsets.all(10.0),
           child: Column(
             children: [
-              SizedBox(height: 32),
-              SearchBox(),
-              Expanded(
+              SizedBox(height: 32.h),
+              const SearchBox(),
+              const Expanded(
                 child: Center(
                   child: Icon(
                     Icons.search_outlined,

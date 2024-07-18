@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:timbu_v2/model/cart_provider.dart';
@@ -25,14 +26,22 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Timbu',
-      theme: ThemeData(
-        textTheme: GoogleFonts.poppinsTextTheme(),
-        useMaterial3: true,
-      ),
-      debugShowCheckedModeBanner: false,
-      home: const MainScreen(),
+    return ScreenUtilInit(
+      builder: (context, child) {
+        return MaterialApp(
+          title: 'Timbu',
+          theme: ThemeData(
+            textTheme: GoogleFonts.poppinsTextTheme(),
+            useMaterial3: true,
+          ),
+          debugShowCheckedModeBanner: false,
+          home: child,
+        );
+      },
+      designSize: const Size(430, 932),
+      minTextAdapt: true,
+      splitScreenMode: true,
+      child: const MainScreen(),
     );
   }
 }

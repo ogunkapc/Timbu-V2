@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:timbu_v2/model/product.dart';
 import 'package:timbu_v2/util/constants/color_constants.dart';
+import 'package:timbu_v2/util/widgets/add_to_cart_button.dart';
 
 class ItemCard extends StatelessWidget {
   final Product product;
@@ -17,16 +19,16 @@ class ItemCard extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: SizedBox(
-        height: 210,
-        width: 160,
+        height: 210.h,
+        width: 160.w,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Container(
-              height: 150,
-              width: 160,
+              height: 160.h,
+              width: 160.w,
               decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(5.45),
+                borderRadius: BorderRadius.circular(5.65.r),
               ),
               child: Hero(
                 tag: product.id,
@@ -38,66 +40,48 @@ class ItemCard extends StatelessWidget {
                     : const Icon(
                         Icons.warning,
                         size: 50,
-                        // color: ColorConstants.primaryColor,
                       ),
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.only(top: 10),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  SizedBox(
-                    width: 80,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          product.name,
-                          maxLines: 2,
-                          overflow: TextOverflow.ellipsis,
-                          style: const TextStyle(
-                            fontSize: 12,
-                            fontWeight: FontWeight.w400,
-                            color: ColorConstants.neutral600,
-                          ),
-                        ),
-                        const SizedBox(
-                          height: 10,
-                        ),
-                        Text(
-                          product.currentPrice != null
-                              ? "NGN ${product.currentPrice.toString()}"
-                              : "price unavailable",
-                          style: const TextStyle(
-                            fontSize: 12,
-                            fontWeight: FontWeight.w600,
-                            color: ColorConstants.neutral800,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  Container(
-                    height: 24,
-                    width: 60,
-                    decoration: BoxDecoration(
-                      border:
-                          Border.all(color: ColorConstants.green, width: 0.79),
-                      borderRadius: BorderRadius.circular(2.37),
-                    ),
-                    child: const Center(
-                      child: Text(
-                        "Add to Cart",
+            SizedBox(
+              height: 10.h,
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                SizedBox(
+                  width: 80.w,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        product.name,
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
                         style: TextStyle(
-                          fontSize: 9,
-                          color: ColorConstants.green,
+                          fontSize: 10.sp,
+                          fontWeight: FontWeight.w400,
+                          color: ColorConstants.neutral600,
                         ),
                       ),
-                    ),
-                  )
-                ],
-              ),
+                      SizedBox(
+                        height: 5.h,
+                      ),
+                      Text(
+                        product.currentPrice != null
+                            ? "NGN ${product.currentPrice.toString()}"
+                            : 10000.toString(),
+                        style: TextStyle(
+                          fontSize: 13.sp,
+                          fontWeight: FontWeight.w600,
+                          color: ColorConstants.neutral800,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                AddToCartButton(product: product),
+              ],
             ),
           ],
         ),

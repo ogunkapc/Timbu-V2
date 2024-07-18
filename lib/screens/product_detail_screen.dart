@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:timbu_v2/model/product.dart';
 import 'package:timbu_v2/util/constants/color_constants.dart';
 import 'package:timbu_v2/util/constants/image_constants.dart';
@@ -32,7 +33,7 @@ class ProductDetail extends StatelessWidget {
                       },
                       child: CircleAvatar(
                         backgroundColor: ColorConstants.neutralWhite,
-                        radius: 15.27,
+                        radius: 15.27.r,
                         child: Image.asset(ImageConstants.backIcon),
                       ),
                     ),
@@ -52,7 +53,7 @@ class ProductDetail extends StatelessWidget {
     return Column(
       children: [
         Container(
-          height: size.height * 0.5,
+          height: (size.height * 0.5).h,
           padding: const EdgeInsets.all(10),
           child: Hero(
             tag: product.id,
@@ -67,17 +68,17 @@ class ProductDetail extends StatelessWidget {
           ),
         ),
         Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 30),
+          padding: EdgeInsets.symmetric(horizontal: 40.w, vertical: 30.h),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Row(
+              Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
                     "uniqueId",
                     style: TextStyle(
-                      fontSize: 16,
+                      fontSize: 16.sp,
                       fontWeight: FontWeight.w300,
                       color: ColorConstants.grey700,
                     ),
@@ -85,7 +86,7 @@ class ProductDetail extends StatelessWidget {
                   Text(
                     "In Stock",
                     style: TextStyle(
-                      fontSize: 14,
+                      fontSize: 14.sp,
                       color: ColorConstants.green,
                     ),
                   )

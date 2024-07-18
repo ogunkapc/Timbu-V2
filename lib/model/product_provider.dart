@@ -9,16 +9,11 @@ class ProductProvider extends ChangeNotifier {
   bool isLoading = false;
   String _errorMessage = '';
   List<Product> productsList = [];
-  List<Product> filteredProductsList = [];
   List<Product> recentlyViewedProducts = [];
 
   // get list of products
   List<Product> getProductsList() {
     return productsList;
-  }
-
-  List<Product> getFilteredProductsList() {
-    return filteredProductsList;
   }
 
   bool getIsLoading() {
@@ -34,14 +29,6 @@ class ProductProvider extends ChangeNotifier {
 
     try {
       productsList = await api.fetchProducts();
-      // initially show all products
-      filteredProductsList = productsList;
-      // Debugging prints
-      print('Fetched Products: ${productsList.length}');
-      for (var product in productsList) {
-        print(
-            'Product: ${product.name}, Categories: ${product.categories.map((c) => c.name).join(', ')}');
-      }
     } catch (e) {
       _errorMessage = e.toString();
     } finally {
@@ -52,23 +39,18 @@ class ProductProvider extends ChangeNotifier {
 
   List<Product> filterProductsByCategory(String categoryName) {
     return productsList.where((product) {
-      return product.categories.any((category) => category.name == categoryName);
+      return product.categories
+          .any((category) => category.name == categoryName);
     }).toList();
   }
 
-  List<Product> getRecentlyViewedProductsByCategory(String categoryName) {
-    return recentlyViewedProducts.where((product) {
-      return product.categories.any((category) => category.name == categoryName);
-    }).toList();
-  }
-
-  // this method is called when a product is viewed
+  // add product to recently viewed when viewed
   void addRecentlyViewedProduct(Product product) {
     recentlyViewedProducts.add(product);
     notifyListeners();
   }
 
-  // Filtering methods for sections
+  //! products filter methods for sections
   List<Product> getJustForYou() {
     return filterProductsByCategory('just for you');
   }
@@ -86,6 +68,6 @@ class ProductProvider extends ChangeNotifier {
   }
 
   List<Product> getRecentlyViewed() {
-    return recentlyViewedProducts;
+    return filterProductsByCategory('recently viewed');
   }
 }

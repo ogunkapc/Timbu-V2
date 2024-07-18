@@ -1,6 +1,8 @@
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
-import 'package:timbu_v2/screens/mainscreen/pages/checkout_screen.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:timbu_v2/screens/mainscreen/pages/home_screen.dart';
+import 'package:timbu_v2/screens/mainscreen/pages/profile_screen.dart';
 import 'package:timbu_v2/screens/mainscreen/pages/wish_list.dart';
 import 'package:timbu_v2/screens/mainscreen/pages/search_screen.dart';
 import 'package:timbu_v2/util/constants/color_constants.dart';
@@ -14,11 +16,13 @@ class MainScreen extends StatefulWidget {
 }
 
 class _MainScreenState extends State<MainScreen> {
+  bool isConnected = true;
+
   int _selectedIndex = 0;
   final List _pages = [
     const HomeScreen(),
     const WishlistScreen(),
-    const CheckoutScreen(),
+    const ProfileScreen(),
     const SearchScreen(),
   ];
 
@@ -30,10 +34,40 @@ class _MainScreenState extends State<MainScreen> {
   }
 
   @override
+  void initState() {
+    super.initState();
+    checkConnectivity();
+  }
+
+  Future<void> checkConnectivity() async {
+    Connectivity().onConnectivityChanged.listen((ConnectivityResult result) {
+      // Check if the device is not connected to the internet
+      if (result == ConnectivityResult.none) {
+        setState(() => isConnected = false);
+      } else {
+        setState(() => isConnected = true);
+      }
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: ColorConstants.neutralWhite,
-      body: _pages[_selectedIndex],
+      body: isConnected
+          ? _pages[_selectedIndex]
+          : Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  const Icon(Icons.signal_wifi_off, size: 50),
+                  Text(
+                    "No Internet Connection",
+                    style: TextStyle(fontSize: 24.sp),
+                  ),
+                ],
+              ),
+            ),
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,
         backgroundColor: ColorConstants.neutralWhite,
@@ -41,12 +75,12 @@ class _MainScreenState extends State<MainScreen> {
         showUnselectedLabels: true,
         selectedItemColor: ColorConstants.neutral900,
         unselectedItemColor: ColorConstants.neutral400,
-        unselectedLabelStyle: const TextStyle(
-          fontSize: 10,
+        unselectedLabelStyle: TextStyle(
+          fontSize: 10.sp,
           fontWeight: FontWeight.w500,
         ),
-        selectedLabelStyle: const TextStyle(
-          fontSize: 10,
+        selectedLabelStyle: TextStyle(
+          fontSize: 10.sp,
           fontWeight: FontWeight.w500,
         ),
         currentIndex: _selectedIndex,
