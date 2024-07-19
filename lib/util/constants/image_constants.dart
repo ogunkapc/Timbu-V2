@@ -8,7 +8,6 @@ class ImageConstants {
   static String emptyCart = "$imagePath/shopping_cart_green.png";
   static String congratulations = "$imagePath/congratulations.png";
 
-
   // our collections
   static String cleanseAndPrep = "$imagePath/cleanse_and_prep.png";
   static String moisturizeAndProtect = "$imagePath/moisturize_and_protect.png";

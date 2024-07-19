@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:timbu_v2/providers/cart_provider.dart';
 import 'package:timbu_v2/model/product.dart';
+import 'package:timbu_v2/screens/checkout_screen.dart';
 import 'package:timbu_v2/screens/product_detail_screen.dart';
 import 'package:timbu_v2/util/constants/color_constants.dart';
 import 'package:timbu_v2/util/constants/image_constants.dart';
@@ -95,7 +96,7 @@ class NotEmptyCartScreen extends StatelessWidget {
             const SizedBox(
               height: 48,
             ),
-            buildCartSummary(cartProvider),
+            buildCartSummary(context, cartProvider),
             SizedBox(
               height: 45.h,
             ),
@@ -342,10 +343,11 @@ class NotEmptyCartScreen extends StatelessWidget {
     );
   }
 
-  Widget buildCartSummary(CartProvider cartProvider) {
+  Widget buildCartSummary(BuildContext context, CartProvider cartProvider) {
     double deliveryFee = 2000;
     double subTotal = cartProvider.totalAmount;
     double totalAmount = subTotal + deliveryFee;
+
     return Container(
       height: 290.h,
       padding: EdgeInsets.symmetric(vertical: 30.h, horizontal: 7.w),
@@ -484,7 +486,15 @@ class NotEmptyCartScreen extends StatelessWidget {
                   width: 13.w,
                 ),
                 GestureDetector(
-                  onTap: () {},
+                  onTap: () {
+                    cartProvider.placeOrder();
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const CheckoutScreen(),
+                      ),
+                    );
+                  },
                   child: Container(
                     padding:
                         EdgeInsets.symmetric(horizontal: 14.w, vertical: 8.h),

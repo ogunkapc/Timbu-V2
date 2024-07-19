@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:timbu_v2/model/order.dart';
 import 'package:timbu_v2/model/product.dart';
 
 class CartProvider extends ChangeNotifier {
@@ -7,7 +8,9 @@ class CartProvider extends ChangeNotifier {
   // List of quantities corresponding to each product
   List<int> quantities = [];
   // List of products in the wishlist
-  List<Product> userWishlistItems = [];
+  List<Product> userWishlist = [];
+  // order history list
+  List<Order> orderHistory = [];
 
   // Get cart
   List<Product> getUserCartItems() {
@@ -35,12 +38,8 @@ class CartProvider extends ChangeNotifier {
   void removeFromCart(Product product) {
     if (userCartItems.contains(product)) {
       int index = userCartItems.indexOf(product);
-      if (quantities[index] > 1) {
-        quantities[index]--;
-      } else {
-        userCartItems.removeAt(index);
-        quantities.removeAt(index);
-      }
+      userCartItems.removeAt(index);
+      quantities.removeAt(index);
       notifyListeners();
     }
   }
@@ -94,55 +93,46 @@ class CartProvider extends ChangeNotifier {
   }
 
   //! Wishlist methods
-  List<Product> getUserWishlistItems() {
-    return userWishlistItems;
+  List<Product> getUserWishlist() {
+    return userWishlist;
   }
 
   void addToWishlist(Product product) {
-    if (!userWishlistItems.contains(product)) {
-      userWishlistItems.add(product);
+    if (!userWishlist.contains(product)) {
+      userWishlist.add(product);
       notifyListeners();
     }
   }
 
   void removeFromWishlist(Product product) {
-    if (userWishlistItems.contains(product)) {
-      userWishlistItems.remove(product);
+    if (userWishlist.contains(product)) {
+      userWishlist.remove(product);
       notifyListeners();
     }
   }
 
   bool isInWishlist(Product product) {
-    return userWishlistItems.contains(product);
+    return userWishlist.contains(product);
   }
 
-  // // Add to cart
-  // void addToCart(Product product) {
-  //   userCartItems.add(product);
-  //   notifyListeners();
-  // }
+  //! Order history methods
+  List<Order> getOrderHistory() {
+    return orderHistory;
+  }
 
-  // // Remove from cart
-  // void removeFromCart(Product product) {
-  //   userCartItems.remove(product);
-  //   notifyListeners();
-  // }
+  void placeOrder() {
+    if (userCartItems.isNotEmpty) {
+      Order newOrder = Order(
+        id: DateTime.now().millisecondsSinceEpoch.toString(),
+        products: List.from(userCartItems),
+        quantities: List.from(quantities),
+        totalAmount: totalAmount,
+        date: DateTime.now(),
+      );
 
-  // // clear cart
-  // void clearCart() {
-  //   userCartItems.clear();
-  //   notifyListeners();
-  // }
-
-  // int getCartCount() {
-  //   return userCartItems.length;
-  // }
-
-  // double get totalAmount {
-  //   double total = 0.0;
-  //   for (var item in userCartItems) {
-  //     total += item.currentPrice!;
-  //   }
-  //   return total;
-  // }
+      orderHistory.add(newOrder);
+      clearCart();
+      notifyListeners();
+    }
+  }
 }
