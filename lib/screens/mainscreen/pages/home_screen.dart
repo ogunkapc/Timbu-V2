@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
-import 'package:timbu_v2/model/product_provider.dart';
+import 'package:timbu_v2/providers/cart_provider.dart';
+import 'package:timbu_v2/providers/product_provider.dart';
 import 'package:timbu_v2/screens/cart_screen.dart';
+import 'package:timbu_v2/screens/order_history.dart';
 import 'package:timbu_v2/screens/product_detail_screen.dart';
 import 'package:timbu_v2/util/constants/color_constants.dart';
 import 'package:timbu_v2/util/constants/image_constants.dart';
@@ -37,6 +39,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
+    final cartProvider = Provider.of<CartProvider>(context);
     return Scaffold(
       backgroundColor: ColorConstants.neutralWhite,
       body: Consumer<ProductProvider>(
@@ -85,12 +88,13 @@ class _HomeScreenState extends State<HomeScreen> {
                               children: [
                                 GestureDetector(
                                   onTap: () {
-                                    // Navigator.push(
-                                    //   context,
-                                    //   MaterialPageRoute(
-                                    //     builder: (context) => const CartScreen(),
-                                    //   ),
-                                    // );
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) =>
+                                            const OrderHistoryScreen(),
+                                      ),
+                                    );
                                   },
                                   child: const Icon(Icons.history),
                                 ),
@@ -107,7 +111,36 @@ class _HomeScreenState extends State<HomeScreen> {
                                       ),
                                     );
                                   },
-                                  child: Image.asset(ImageConstants.cartIcon),
+                                  child: cartProvider.getUserCartItems().isEmpty
+                                      ? Image.asset(ImageConstants.cartIcon)
+                                      : Stack(
+                                          alignment: Alignment.center,
+                                          children: [
+                                            Image.asset(
+                                              ImageConstants.filledCart,
+                                              scale: 1,
+                                            ),
+                                            Row(
+                                              children: [
+                                                SizedBox(
+                                                  width: 4.w,
+                                                ),
+                                                Center(
+                                                  child: Text(
+                                                    "${cartProvider.getUserCartItems().length}",
+                                                    style: TextStyle(
+                                                      fontSize: 10.sp,
+                                                      fontWeight:
+                                                          FontWeight.w700,
+                                                      color: ColorConstants
+                                                          .baseWhite,
+                                                    ),
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ],
+                                        ),
                                 ),
                               ],
                             ),
@@ -151,7 +184,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         height: 24.h,
                       ),
                       Container(
-                        height: 225,
+                        height: 230.h,
                         padding: EdgeInsets.only(left: 48.w),
                         child: justForYouList.isNotEmpty
                             ? ListView.builder(
@@ -164,6 +197,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                     child: ItemCard(
                                       product: justForYouList[index],
                                       onTap: () {
+                                        value.addToRecentlyViewedList(
+                                            justForYouList[index]);
                                         Navigator.push(
                                           context,
                                           MaterialPageRoute(
@@ -184,8 +219,8 @@ class _HomeScreenState extends State<HomeScreen> {
                     ],
                   ),
                   Padding(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 35, vertical: 48),
+                    padding:
+                        EdgeInsets.symmetric(horizontal: 48.w, vertical: 40.h),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -214,8 +249,8 @@ class _HomeScreenState extends State<HomeScreen> {
                           ],
                         ),
                         const Divider(),
-                        const SizedBox(
-                          height: 10,
+                        SizedBox(
+                          height: 10.h,
                         ),
                         dealsList.isEmpty
                             ? const Center(
@@ -227,7 +262,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                 gridDelegate:
                                     SliverGridDelegateWithFixedCrossAxisCount(
                                   crossAxisCount: size.width >= 500 ? 4 : 2,
-                                  crossAxisSpacing: size.width >= 500 ? 32 : 15,
+                                  crossAxisSpacing:
+                                      size.width >= 500 ? 32.w : 15.w,
                                   childAspectRatio: 0.6,
                                 ),
                                 itemCount: dealsList.length,
@@ -247,19 +283,19 @@ class _HomeScreenState extends State<HomeScreen> {
                                   );
                                 },
                               ),
-                        const SizedBox(height: 30),
-                        const Text(
+                        SizedBox(height: 30.h),
+                        Text(
                           "Our Collections",
                           style: TextStyle(
-                            fontSize: 16,
+                            fontSize: 16.sp,
                             fontWeight: FontWeight.w300,
-                            letterSpacing: 0.31 * 16,
+                            letterSpacing: (0.31 * 16).sp,
                             color: ColorConstants.baseBlack,
                           ),
                         ),
                         const Divider(),
-                        const SizedBox(
-                          height: 10,
+                        SizedBox(
+                          height: 10.h,
                         ),
                         ourCollectionsList.isEmpty
                             ? const Center(
@@ -270,16 +306,17 @@ class _HomeScreenState extends State<HomeScreen> {
                                 physics: const NeverScrollableScrollPhysics(),
                                 gridDelegate:
                                     SliverGridDelegateWithFixedCrossAxisCount(
-                                        crossAxisCount:
-                                            size.width >= 500 ? 4 : 2,
-                                        mainAxisSpacing: 16,
-                                        crossAxisSpacing:
-                                            size.width >= 500 ? 32 : 15,
-                                        childAspectRatio: 0.6),
+                                  crossAxisCount: size.width >= 500 ? 4 : 2,
+                                  crossAxisSpacing:
+                                      size.width >= 500 ? 32.w : 15.w,
+                                  mainAxisSpacing: 10.h,
+                                  childAspectRatio: 0.8,
+                                ),
                                 itemCount: ourCollectionsList.length,
                                 itemBuilder: (context, index) {
                                   return CollectionsCard(
                                     product: ourCollectionsList[index],
+                                    heroTag: "collection_$index",
                                     onTap: () {
                                       Navigator.push(
                                         context,
@@ -293,8 +330,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                   );
                                 },
                               ),
-                        const SizedBox(
-                          height: 30,
+                        SizedBox(
+                          height: 30.h,
                         ),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,

@@ -32,7 +32,6 @@ class EmptyCartScreen extends StatelessWidget {
                 Image.asset(ImageConstants.cartIcon),
               ],
             ),
-            // const Spacer(),
             Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -156,7 +155,6 @@ class EmptyCartScreen extends StatelessWidget {
                 ),
               ],
             ),
-            // const Spacer(),
           ],
         ),
       ),

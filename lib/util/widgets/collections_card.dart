@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:timbu_v2/model/product.dart';
 
 class CollectionsCard extends StatelessWidget {
   final Product product;
+  final String heroTag;
   final void Function() onTap;
   const CollectionsCard({
     super.key,
     required this.product,
+    required this.heroTag,
     required this.onTap,
   });
 
@@ -20,7 +23,7 @@ class CollectionsCard extends StatelessWidget {
         child: Column(
           children: [
             Hero(
-              tag: product.id,
+              tag: heroTag,
               child: Container(
                 height: 142,
                 decoration: BoxDecoration(
@@ -31,6 +34,9 @@ class CollectionsCard extends StatelessWidget {
                   ),
                 ),
               ),
+            ),
+            SizedBox(
+              height: 5.h,
             ),
             Text(
               product.name,

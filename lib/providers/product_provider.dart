@@ -45,7 +45,7 @@ class ProductProvider extends ChangeNotifier {
   }
 
   // add product to recently viewed when viewed
-  void addRecentlyViewedProduct(Product product) {
+  void addToRecentlyViewedList(Product product) {
     recentlyViewedProducts.add(product);
     notifyListeners();
   }

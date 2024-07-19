@@ -41,7 +41,6 @@ class _MainScreenState extends State<MainScreen> {
 
   Future<void> checkConnectivity() async {
     Connectivity().onConnectivityChanged.listen((ConnectivityResult result) {
-      // Check if the device is not connected to the internet
       if (result == ConnectivityResult.none) {
         setState(() => isConnected = false);
       } else {

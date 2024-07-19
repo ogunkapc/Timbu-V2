@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:timbu_v2/model/cart_provider.dart';
+import 'package:timbu_v2/providers/cart_provider.dart';
 import 'package:timbu_v2/model/product.dart';
 import 'package:timbu_v2/screens/product_detail_screen.dart';
 import 'package:timbu_v2/util/constants/color_constants.dart';
@@ -24,7 +24,7 @@ class NotEmptyCartScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return SingleChildScrollView(
       child: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 48.w, vertical: 32.h),
+        padding: EdgeInsets.symmetric(horizontal: 40.w, vertical: 32.h),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -52,7 +52,32 @@ class NotEmptyCartScreen extends StatelessWidget {
                     )
                   ],
                 ),
-                Image.asset(ImageConstants.filledCart),
+                Stack(
+                  alignment: Alignment.center,
+                  children: [
+                    Image.asset(
+                      ImageConstants.filledCart,
+                      scale: 1,
+                    ),
+                    Row(
+                      children: [
+                        SizedBox(
+                          width: 4.w,
+                        ),
+                        Center(
+                          child: Text(
+                            "${cartList.length}",
+                            style: TextStyle(
+                              fontSize: 10.sp,
+                              fontWeight: FontWeight.w700,
+                              color: ColorConstants.baseWhite,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
               ],
             ),
             const Divider(),
@@ -61,6 +86,7 @@ class NotEmptyCartScreen extends StatelessWidget {
             ),
             ListView.builder(
                 shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
                 itemCount: cartList.length,
                 itemBuilder: (context, index) {
                   final product = cartList[index];
@@ -99,24 +125,27 @@ class NotEmptyCartScreen extends StatelessWidget {
             ),
             const Divider(),
             SizedBox(
-              height: 220.h,
+              height: 230.h,
               child: ListView.builder(
                   itemCount: youMightLikeList.length,
                   scrollDirection: Axis.horizontal,
                   itemBuilder: (context, index) {
                     final product = youMightLikeList[index];
-                    return ItemCard(
-                      product: product,
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => ProductDetail(
-                              product: product,
+                    return Container(
+                      margin: const EdgeInsets.only(right: 20),
+                      child: ItemCard(
+                        product: product,
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => ProductDetail(
+                                product: product,
+                              ),
                             ),
-                          ),
-                        );
-                      },
+                          );
+                        },
+                      ),
                     );
                   }),
             ),
@@ -127,24 +156,27 @@ class NotEmptyCartScreen extends StatelessWidget {
   }
 
   Widget buildCartItem(Product product, CartProvider cartProvider) {
-    return SizedBox(
-      height: 120,
+    int index = cartProvider.getUserCartItems().indexOf(product);
+    int quantity = cartProvider.getQuantities()[index];
+    return Container(
+      height: 120.h,
+      margin: EdgeInsets.symmetric(vertical: 10.h),
       child: Row(
         children: [
           Container(
-            width: 87,
+            width: 87.w,
             decoration: BoxDecoration(
               image: DecorationImage(
                 image: NetworkImage(
                   product.photos.first,
                 ),
-                fit: BoxFit.cover,
+                fit: BoxFit.fill,
               ),
-              borderRadius: BorderRadius.circular(3.42),
+              borderRadius: BorderRadius.circular(3.42.r),
             ),
           ),
-          const SizedBox(
-            width: 23,
+          SizedBox(
+            width: 20.w,
           ),
           Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -155,18 +187,24 @@ class NotEmptyCartScreen extends StatelessWidget {
                 children: [
                   Text(
                     product.uniqueId,
-                    style: const TextStyle(
-                      fontSize: 12,
+                    style: TextStyle(
+                      fontSize: 12.sp,
                       fontWeight: FontWeight.w300,
                       color: ColorConstants.grey700,
+                      letterSpacing: (0.4 * 12).sp,
                     ),
                   ),
-                  Text(
-                    product.name,
-                    style: const TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w600,
-                      color: ColorConstants.baseBlack,
+                  SizedBox(
+                    width: 123.w,
+                    child: Text(
+                      product.name,
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(
+                        fontSize: 16.sp,
+                        fontWeight: FontWeight.w600,
+                        color: ColorConstants.baseBlack,
+                      ),
                     ),
                   ),
                 ],
@@ -174,65 +212,79 @@ class NotEmptyCartScreen extends StatelessWidget {
               Row(
                 children: [
                   Container(
-                    height: 30,
-                    width: 70,
+                    height: 30.h,
+                    width: 70.w,
                     decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(1.83),
+                      borderRadius: BorderRadius.circular(1.83.r),
                       border: Border.all(
-                          color: ColorConstants.grey600, width: 0.34),
+                        color: ColorConstants.grey600,
+                        width: 0.34.w,
+                      ),
                     ),
                     child: Row(
                       children: [
+                        //! decrement quantity
                         GestureDetector(
-                          onTap: () {},
+                          onTap: () {
+                            cartProvider.decrementQuantity(product);
+                          },
                           child: Container(
-                            height: 24.31,
-                            width: 26.25,
+                            height: 24.31.h,
+                            width: 26.25.w,
                             decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(1.83),
-                              border: const Border.symmetric(
+                              borderRadius: BorderRadius.circular(1.83.r),
+                              border: Border.symmetric(
                                 horizontal: BorderSide(
                                   color: ColorConstants.neutral200,
-                                  width: 0.3,
+                                  width: 0.3.w,
                                 ),
                               ),
                             ),
-                            child: const Center(
+                            child: Center(
                               child: Text(
                                 "-",
                                 style: TextStyle(
-                                  fontSize: 16,
+                                  fontSize: 16.sp,
                                   color: ColorConstants.green,
                                 ),
                               ),
                             ),
                           ),
                         ),
-                        const SizedBox(
-                          width: 13.42,
+                        SizedBox(
+                          width: 13.42.w,
                           child: Center(
-                            child: Text("1"),
+                            child: Text(
+                              quantity.toString(),
+                              style: GoogleFonts.inter(
+                                fontSize: 12,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
                           ),
                         ),
+                        //! increment quantity
                         GestureDetector(
-                          onTap: () {},
+                          onTap: () {
+                            cartProvider.incrementQuantity(product);
+                          },
                           child: Container(
-                            height: 24.31,
-                            width: 26.25,
+                            height: 24.31.h,
+                            width: 26.25.w,
                             decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(1.83),
-                              border: const Border.symmetric(
+                              borderRadius: BorderRadius.circular(1.83.r),
+                              border: Border.symmetric(
                                 horizontal: BorderSide(
                                   color: ColorConstants.neutral200,
-                                  width: 0.3,
+                                  width: 0.3.r,
                                 ),
                               ),
                             ),
-                            child: const Center(
+                            child: Center(
                               child: Text(
                                 "+",
                                 style: TextStyle(
-                                  fontSize: 16,
+                                  fontSize: 12.sp,
                                   color: ColorConstants.green,
                                 ),
                               ),
@@ -242,45 +294,48 @@ class NotEmptyCartScreen extends StatelessWidget {
                       ],
                     ),
                   ),
-                  const SizedBox(
-                    width: 6.75,
+                  SizedBox(
+                    width: 6.75.w,
                   ),
-                  Container(
-                    height: 30,
-                    width: 30.73,
-                    color: const Color(0xFFCC474E),
-                    child: Image.asset(
-                      ImageConstants.deleteIcon,
+                  //! remove from cart
+                  GestureDetector(
+                    onTap: () {
+                      cartProvider.removeFromCart(product);
+                    },
+                    child: Container(
+                      height: 30.h,
+                      width: 30.73.w,
+                      color: const Color(0xFFCC474E),
+                      child: Image.asset(
+                        ImageConstants.deleteIcon,
+                      ),
                     ),
                   ),
                 ],
-              )
+              ),
             ],
           ),
           const Spacer(),
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text(
+              Text(
                 "Unit price",
                 style: TextStyle(
-                  fontSize: 12,
+                  fontSize: 12.sp,
                   fontWeight: FontWeight.w400,
                   color: ColorConstants.grey800,
                 ),
               ),
               Text(
-                product.currentPrice.toString(),
-                style: const TextStyle(
-                  fontSize: 16,
+                "NGN ${product.currentPrice!.toStringAsFixed(0)}",
+                style: TextStyle(
+                  fontSize: 16.sp,
                   fontWeight: FontWeight.w600,
                   color: ColorConstants.neutral800,
                 ),
               ),
             ],
-          ),
-          const SizedBox(
-            width: 15,
           ),
         ],
       ),
@@ -288,14 +343,14 @@ class NotEmptyCartScreen extends StatelessWidget {
   }
 
   Widget buildCartSummary(CartProvider cartProvider) {
-    double deliveryFee = 2.00;
+    double deliveryFee = 2000;
     double subTotal = cartProvider.totalAmount;
     double totalAmount = subTotal + deliveryFee;
     return Container(
-      height: 290,
-      padding: const EdgeInsets.symmetric(vertical: 35, horizontal: 7.5),
+      height: 290.h,
+      padding: EdgeInsets.symmetric(vertical: 30.h, horizontal: 7.w),
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(12.r),
         border: Border.all(color: ColorConstants.green),
       ),
       child: Column(
@@ -304,34 +359,34 @@ class NotEmptyCartScreen extends StatelessWidget {
           Text(
             "Cart summary",
             style: GoogleFonts.lora(
-              fontSize: 18,
+              fontSize: 18.sp,
               fontWeight: FontWeight.w600,
               color: ColorConstants.baseBlack,
             ),
           ),
-          const SizedBox(
-            height: 30,
+          SizedBox(
+            height: 30.h,
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              const Column(
+              Column(
                 children: [
                   Text(
                     "Sub-total",
                     style: TextStyle(
-                      fontSize: 14,
+                      fontSize: 14.sp,
                       color: ColorConstants.grey700,
                       fontWeight: FontWeight.w400,
                     ),
                   ),
                   SizedBox(
-                    height: 22,
+                    height: 22.h,
                   ),
                   Text(
                     "Delivery",
                     style: TextStyle(
-                      fontSize: 14,
+                      fontSize: 14.sp,
                       color: ColorConstants.grey700,
                       fontWeight: FontWeight.w400,
                     ),
@@ -341,20 +396,20 @@ class NotEmptyCartScreen extends StatelessWidget {
               Column(
                 children: [
                   Text(
-                    "NGN ${subTotal.toStringAsFixed(2)}",
-                    style: const TextStyle(
-                      fontSize: 14,
+                    "NGN ${subTotal.toStringAsFixed(0)}",
+                    style: TextStyle(
+                      fontSize: 14.sp,
                       color: ColorConstants.grey700,
                       fontWeight: FontWeight.w600,
                     ),
                   ),
-                  const SizedBox(
-                    height: 22,
+                  SizedBox(
+                    height: 22.h,
                   ),
                   Text(
-                    "NGN ${deliveryFee.toStringAsFixed(20)}",
-                    style: const TextStyle(
-                      fontSize: 14,
+                    "NGN ${deliveryFee.toStringAsFixed(0)}",
+                    style: TextStyle(
+                      fontSize: 14.sp,
                       color: ColorConstants.grey700,
                       fontWeight: FontWeight.w600,
                     ),
@@ -363,8 +418,8 @@ class NotEmptyCartScreen extends StatelessWidget {
               ),
             ],
           ),
-          const SizedBox(
-            height: 30,
+          SizedBox(
+            height: 30.h,
           ),
           Container(
             padding: const EdgeInsets.all(10),
@@ -378,68 +433,78 @@ class NotEmptyCartScreen extends StatelessWidget {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
-                  decoration: BoxDecoration(
-                    border: Border.all(color: ColorConstants.neutral800),
-                    borderRadius: BorderRadius.circular(4),
-                  ),
-                  child: Text(
-                    "Cancel",
-                    style: GoogleFonts.inter(
-                      fontSize: 14,
-                      fontWeight: FontWeight.w500,
-                      color: ColorConstants.neutral800,
+                //! cancel order and clear cart
+                GestureDetector(
+                  onTap: () {
+                    cartProvider.clearCart();
+                  },
+                  child: Container(
+                    padding:
+                        EdgeInsets.symmetric(horizontal: 8.w, vertical: 8.h),
+                    decoration: BoxDecoration(
+                      border: Border.all(color: ColorConstants.neutral800),
+                      borderRadius: BorderRadius.circular(4.r),
+                    ),
+                    child: Text(
+                      "Cancel",
+                      style: GoogleFonts.inter(
+                        fontSize: 14.sp,
+                        fontWeight: FontWeight.w500,
+                        color: ColorConstants.neutral800,
+                      ),
                     ),
                   ),
                 ),
-                const SizedBox(
-                  width: 16,
+                SizedBox(
+                  width: 13.w,
                 ),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    const Text(
+                    Text(
                       "Total Amount",
                       style: TextStyle(
-                        fontSize: 14,
+                        fontSize: 14.sp,
                         color: ColorConstants.neutral600,
                         fontWeight: FontWeight.w400,
                       ),
                     ),
                     Text(
-                      "NGN ${totalAmount.toStringAsFixed(2)}",
-                      style: const TextStyle(
-                        fontSize: 18,
+                      "NGN ${totalAmount.toStringAsFixed(0)}",
+                      style: TextStyle(
+                        fontSize: 17.sp,
                         color: ColorConstants.neutral800,
                         fontWeight: FontWeight.w600,
                       ),
                     ),
                   ],
                 ),
-                const SizedBox(
-                  width: 16,
+                SizedBox(
+                  width: 13.w,
                 ),
-                Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(6),
-                    color: ColorConstants.green,
-                  ),
-                  child: const Text(
-                    "Checkout",
-                    style: TextStyle(
-                      fontSize: 14,
-                      fontWeight: FontWeight.w400,
-                      color: ColorConstants.baseWhite,
+                GestureDetector(
+                  onTap: () {},
+                  child: Container(
+                    padding:
+                        EdgeInsets.symmetric(horizontal: 14.w, vertical: 8.h),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(6.r),
+                      color: ColorConstants.green,
+                    ),
+                    child: Text(
+                      "Checkout",
+                      style: TextStyle(
+                        fontSize: 14.sp,
+                        fontWeight: FontWeight.w400,
+                        color: ColorConstants.baseWhite,
+                      ),
                     ),
                   ),
                 ),
               ],
             ),
-          )
+          ),
         ],
       ),
     );

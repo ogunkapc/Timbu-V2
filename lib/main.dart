@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
-import 'package:timbu_v2/model/cart_provider.dart';
-import 'package:timbu_v2/model/product_provider.dart';
+import 'package:timbu_v2/providers/cart_provider.dart';
+import 'package:timbu_v2/providers/product_provider.dart';
 import 'package:timbu_v2/screens/mainscreen/main_screen.dart';
 import 'package:timbu_v2/service/api_service.dart';
 

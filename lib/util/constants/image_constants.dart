@@ -6,7 +6,8 @@ class ImageConstants {
   // ! images
   static String chevronDouble = "$imagePath/chevron_double_arrow.png";
   static String emptyCart = "$imagePath/shopping_cart_green.png";
-  static String repairScrub = "$imagePath/repair_scrub.png";
+  static String congratulations = "$imagePath/congratulations.png";
+
 
   // our collections
   static String cleanseAndPrep = "$imagePath/cleanse_and_prep.png";

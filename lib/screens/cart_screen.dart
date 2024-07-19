@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:timbu_v2/model/cart_provider.dart';
-import 'package:timbu_v2/model/product_provider.dart';
+import 'package:timbu_v2/providers/cart_provider.dart';
+import 'package:timbu_v2/providers/product_provider.dart';
 import 'package:timbu_v2/util/constants/color_constants.dart';
 
 import '../util/widgets/empty_cart_screen.dart';

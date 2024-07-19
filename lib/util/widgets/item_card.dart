@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:provider/provider.dart';
+import 'package:timbu_v2/providers/cart_provider.dart';
 import 'package:timbu_v2/model/product.dart';
 import 'package:timbu_v2/util/constants/color_constants.dart';
 import 'package:timbu_v2/util/widgets/add_to_cart_button.dart';
@@ -16,6 +18,9 @@ class ItemCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final cartProvider = Provider.of<CartProvider>(context);
+    final isInWishlist = cartProvider.isInWishlist(product);
+
     return GestureDetector(
       onTap: onTap,
       child: SizedBox(
@@ -24,24 +29,42 @@ class ItemCard extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Container(
-              height: 160.h,
-              width: 160.w,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(5.65.r),
-              ),
-              child: Hero(
-                tag: product.id,
-                child: product.photos.isNotEmpty
-                    ? Image.network(
-                        product.photos.first,
-                        fit: BoxFit.fill,
-                      )
-                    : const Icon(
-                        Icons.warning,
-                        size: 50,
-                      ),
-              ),
+            Stack(
+              children: [
+                Container(
+                  height: 140.h,
+                  width: 160.w,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(5.65.r),
+                  ),
+                  child: product.photos.isNotEmpty
+                      ? Image.network(
+                          product.photos.first,
+                          fit: BoxFit.contain,
+                        )
+                      : const Icon(
+                          Icons.warning,
+                          size: 50,
+                        ),
+                ),
+                Positioned(
+                  top: 8.h,
+                  right: 8.w,
+                  child: GestureDetector(
+                    onTap: () {
+                      if (isInWishlist) {
+                        cartProvider.removeFromWishlist(product);
+                      } else {
+                        cartProvider.addToWishlist(product);
+                      }
+                    },
+                    child: Icon(
+                      isInWishlist ? Icons.favorite : Icons.favorite_border,
+                      color: isInWishlist ? Colors.red : Colors.grey,
+                    ),
+                  ),
+                ),
+              ],
             ),
             SizedBox(
               height: 10.h,
@@ -59,7 +82,7 @@ class ItemCard extends StatelessWidget {
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,
                         style: TextStyle(
-                          fontSize: 10.sp,
+                          fontSize: 12.sp,
                           fontWeight: FontWeight.w400,
                           color: ColorConstants.neutral600,
                         ),
@@ -69,8 +92,8 @@ class ItemCard extends StatelessWidget {
                       ),
                       Text(
                         product.currentPrice != null
-                            ? "NGN ${product.currentPrice.toString()}"
-                            : 10000.toString(),
+                            ? "NGN ${product.currentPrice!.toStringAsFixed(0)}"
+                            : 10000.toStringAsFixed(0),
                         style: TextStyle(
                           fontSize: 13.sp,
                           fontWeight: FontWeight.w600,

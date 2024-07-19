@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
-import 'package:timbu_v2/model/cart_provider.dart';
+import 'package:timbu_v2/providers/cart_provider.dart';
 import 'package:timbu_v2/model/product.dart';
 import 'package:timbu_v2/util/constants/color_constants.dart';
 
@@ -21,17 +21,31 @@ class AddToCartButton extends StatelessWidget {
         showModalBottomSheet(
           context: context,
           builder: (context) => Container(
-              padding: const EdgeInsets.all(24),
-              child: Text(
-                "${product.name} has been added to cart",
+            padding: const EdgeInsets.all(24),
+            child: RichText(
+              text: TextSpan(
+                children: [
+                  TextSpan(
+                    text: "${product.name} ",
+                    style: const TextStyle(
+                      color: ColorConstants.green,
+                    ),
+                  ),
+                  const TextSpan(
+                    text: "added to cart",
+                    style: TextStyle(
+                      color: ColorConstants.neutral600,
+                    ),
+                  )
+                ],
                 style: TextStyle(
-                  color: ColorConstants.black50,
-                  fontSize: 16,
+                  fontSize: 14.sp,
                   fontWeight: FontWeight.w600,
                 ),
-                textAlign: TextAlign.center,
-              )),
-          backgroundColor: ColorConstants.backgroundColor,
+              ),
+            ),
+          ),
+          backgroundColor: ColorConstants.neutralWhite,
         );
       },
       child: Container(
