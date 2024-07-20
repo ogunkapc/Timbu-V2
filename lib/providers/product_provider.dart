@@ -9,7 +9,9 @@ class ProductProvider extends ChangeNotifier {
   bool isLoading = false;
   String _errorMessage = '';
   List<Product> productsList = [];
+  List<Product> filteredProductsList = [];
   List<Product> recentlyViewedProducts = [];
+  String _searchQuery = '';
 
   // get list of products
   List<Product> getProductsList() {
@@ -22,6 +24,8 @@ class ProductProvider extends ChangeNotifier {
 
   String get errorMessage => _errorMessage;
 
+  String get searchQuery => _searchQuery;
+
   // fetch products from API
   Future<void> fetchProducts() async {
     isLoading = true;
@@ -29,12 +33,27 @@ class ProductProvider extends ChangeNotifier {
 
     try {
       productsList = await api.fetchProducts();
+      // filteredProductsList = productsList;
     } catch (e) {
       _errorMessage = e.toString();
     } finally {
       isLoading = false;
       notifyListeners();
     }
+  }
+
+  //! Search
+  // filter products for search query locally
+  void searchProducts(String query) {
+    _searchQuery = query;
+    if (query.isEmpty) {
+      filteredProductsList = [];
+    } else {
+      filteredProductsList = productsList.where((product) {
+        return product.name.toLowerCase().contains(query.toLowerCase());
+      }).toList();
+    }
+    notifyListeners();
   }
 
   List<Product> filterProductsByCategory(String categoryName) {
@@ -44,9 +63,44 @@ class ProductProvider extends ChangeNotifier {
     }).toList();
   }
 
+  // Filter products by search query
+  void filterProductsBySearchQuery(String query) {
+    filteredProductsList = productsList.where((product) {
+      return product.name.toLowerCase().contains(query.toLowerCase());
+    }).toList();
+    notifyListeners();
+  }
+
+  // Filter products by search query and fetch if needed
+  // Future<void> filterProductsBySearchQuery(String query) async {
+  //   if (productsList.isEmpty) {
+  //     isLoading = true;
+  //     notifyListeners();
+
+  //     try {
+  //       productsList = await api.fetchProducts();
+  //     } catch (e) {
+  //       _errorMessage = e.toString();
+  //     } finally {
+  //       isLoading = false;
+  //       notifyListeners();
+  //     }
+  //   }
+
+  //   filteredProductsList = productsList.where((product) {
+  //     return product.name.toLowerCase().contains(query.toLowerCase());
+  //   }).toList();
+  //   notifyListeners();
+  // }
+
   // add product to recently viewed when viewed
   void addToRecentlyViewedList(Product product) {
-    recentlyViewedProducts.add(product);
+    if (!recentlyViewedProducts.contains(product)) {
+      if (recentlyViewedProducts.length >= 5) {
+        recentlyViewedProducts.removeAt(0);
+      }
+      recentlyViewedProducts.add(product);
+    }
     notifyListeners();
   }
 
@@ -68,6 +122,6 @@ class ProductProvider extends ChangeNotifier {
   }
 
   List<Product> getRecentlyViewed() {
-    return filterProductsByCategory('recently viewed');
+    return recentlyViewedProducts;
   }
 }

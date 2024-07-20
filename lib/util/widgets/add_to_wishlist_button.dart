@@ -1,23 +1,30 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:provider/provider.dart';
-import 'package:timbu_v2/providers/cart_provider.dart';
 import 'package:timbu_v2/model/product.dart';
+import 'package:timbu_v2/providers/cart_provider.dart';
 import 'package:timbu_v2/util/constants/color_constants.dart';
 
-class AddToCartButton extends StatelessWidget {
-  final Product product;
-  const AddToCartButton({
+class AddToWishlistButton extends StatelessWidget {
+  const AddToWishlistButton({
     super.key,
+    required this.isInWishlist,
+    required this.cartProvider,
     required this.product,
   });
 
+  final bool isInWishlist;
+  final CartProvider cartProvider;
+  final Product product;
+
   @override
   Widget build(BuildContext context) {
-    final cartProvider = Provider.of<CartProvider>(context, listen: false);
     return GestureDetector(
       onTap: () {
-        cartProvider.addToCart(product);
+        if (isInWishlist) {
+          cartProvider.removeFromWishlist(product);
+        } else {
+          cartProvider.addToWishlist(product);
+        }
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             backgroundColor: ColorConstants.neutralWhite,
@@ -42,9 +49,11 @@ class AddToCartButton extends StatelessWidget {
                         color: ColorConstants.green,
                       ),
                     ),
-                    const TextSpan(
-                      text: "added to cart",
-                      style: TextStyle(
+                    TextSpan(
+                      text: !isInWishlist
+                          ? "added to wishlist"
+                          : "removed from wishlist",
+                      style: const TextStyle(
                         color: ColorConstants.neutral600,
                       ),
                     )
@@ -60,22 +69,9 @@ class AddToCartButton extends StatelessWidget {
           ),
         );
       },
-      child: Container(
-        height: 24.h,
-        width: 56.w,
-        decoration: BoxDecoration(
-          border: Border.all(color: ColorConstants.green, width: 0.79.w),
-          borderRadius: BorderRadius.circular(2.37.r),
-        ),
-        child: Center(
-          child: Text(
-            "Add to Cart",
-            style: TextStyle(
-              fontSize: 7.1.sp,
-              color: ColorConstants.green,
-            ),
-          ),
-        ),
+      child: Icon(
+        isInWishlist ? Icons.favorite : Icons.favorite_border,
+        color: isInWishlist ? Colors.red : Colors.grey,
       ),
     );
   }

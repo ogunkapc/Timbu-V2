@@ -15,8 +15,6 @@ class WishlistScreen extends StatelessWidget {
     final cartProvider = Provider.of<CartProvider>(context);
     final wishList = cartProvider.getUserWishlist();
 
-    Size size = MediaQuery.of(context).size;
-
     return Scaffold(
       backgroundColor: ColorConstants.neutralWhite,
       appBar: AppBar(
@@ -36,27 +34,97 @@ class WishlistScreen extends StatelessWidget {
             children: [
               Expanded(
                 child: wishList.isNotEmpty
-                    ? GridView.builder(
+                    ? ListView.builder(
                         itemCount: wishList.length,
-                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: size.width >= 500 ? 4 : 2,
-                          crossAxisSpacing: size.width >= 500 ? 32.w : 15.w,
-                          mainAxisSpacing: 10.h,
-                          childAspectRatio: 0.7,
-                        ),
                         itemBuilder: (context, index) {
-                          return ItemCard(
-                            product: wishList[index],
-                            onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => ProductDetail(
-                                    product: wishList[index],
+                          final product = wishList[index];
+                          return Container(
+                            padding: EdgeInsets.symmetric(
+                              vertical: 10.h,
+                            ),
+                            child: ListTile(
+                              title: Text(
+                                product.name,
+                                maxLines: 2,
+                                overflow: TextOverflow.ellipsis,
+                                style: TextStyle(
+                                  fontSize: 16.sp,
+                                  fontWeight: FontWeight.w600,
+                                  color: ColorConstants.baseBlack,
+                                ),
+                              ),
+                              subtitle: Text(
+                                "NGN ${product.currentPrice!.toStringAsFixed(0)}",
+                                style: TextStyle(
+                                  fontSize: 14.sp,
+                                  color: ColorConstants.grey700,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                              leading: Container(
+                                height: 120.h,
+                                width: 60.w,
+                                decoration: BoxDecoration(
+                                  image: DecorationImage(
+                                    image: NetworkImage(
+                                      product.photos.first,
+                                    ),
+                                    fit: BoxFit.fill,
                                   ),
                                 ),
-                              );
-                            },
+                              ),
+                              trailing: Column(
+                                children: [
+                                  BuyNowButton(product: product),
+                                  SizedBox(
+                                    height: 10.h,
+                                  ),
+                                  GestureDetector(
+                                    onTap: () {
+                                      cartProvider.removeFromWishlist(product);
+                                    },
+                                    child: Container(
+                                      height: 24.h,
+                                      width: 66.w,
+                                      decoration: BoxDecoration(
+                                        // color: const Color(0xFFCC474E),
+                                        borderRadius:
+                                            BorderRadius.circular(2.37.r),
+                                      ),
+                                      child: Row(
+                                        children: [
+                                          // Image.asset(
+                                          //   ImageConstants.deleteIcon,
+                                          // ),
+                                          const Icon(
+                                            Icons.delete,
+                                            size: 15,
+                                          ),
+                                          Text(
+                                            "Remove",
+                                            style: TextStyle(
+                                              fontSize: 10.sp,
+                                              fontWeight: FontWeight.w600,
+                                              color: ColorConstants.baseBlack,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  )
+                                ],
+                              ),
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => ProductDetail(
+                                      product: product,
+                                    ),
+                                  ),
+                                );
+                              },
+                            ),
                           );
                         },
                       )

@@ -214,7 +214,7 @@ class NotEmptyCartScreen extends StatelessWidget {
                 children: [
                   Container(
                     height: 30.h,
-                    width: 70.w,
+                    width: 75.w,
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(1.83.r),
                       border: Border.all(
@@ -223,6 +223,7 @@ class NotEmptyCartScreen extends StatelessWidget {
                       ),
                     ),
                     child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         //! decrement quantity
                         GestureDetector(
@@ -231,7 +232,7 @@ class NotEmptyCartScreen extends StatelessWidget {
                           },
                           child: Container(
                             height: 24.31.h,
-                            width: 26.25.w,
+                            width: 27.25.w,
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(1.83.r),
                               border: Border.symmetric(
@@ -253,12 +254,12 @@ class NotEmptyCartScreen extends StatelessWidget {
                           ),
                         ),
                         SizedBox(
-                          width: 13.42.w,
+                          width: 16.5.w,
                           child: Center(
                             child: Text(
                               quantity.toString(),
                               style: GoogleFonts.inter(
-                                fontSize: 12,
+                                fontSize: 12.sp,
                                 fontWeight: FontWeight.w600,
                               ),
                             ),
@@ -271,7 +272,7 @@ class NotEmptyCartScreen extends StatelessWidget {
                           },
                           child: Container(
                             height: 24.31.h,
-                            width: 26.25.w,
+                            width: 27.25.w,
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(1.83.r),
                               border: Border.symmetric(
@@ -285,7 +286,7 @@ class NotEmptyCartScreen extends StatelessWidget {
                               child: Text(
                                 "+",
                                 style: TextStyle(
-                                  fontSize: 12.sp,
+                                  fontSize: 16.sp,
                                   color: ColorConstants.green,
                                 ),
                               ),
@@ -437,8 +438,33 @@ class NotEmptyCartScreen extends StatelessWidget {
               children: [
                 //! cancel order and clear cart
                 GestureDetector(
-                  onTap: () {
-                    cartProvider.clearCart();
+                  onTap: () async {
+                    bool? confirmCancel = await showDialog(
+                      context: context,
+                      builder: (context) => AlertDialog(
+                        title: const Text("Confirm Cancellation"),
+                        content: Text(
+                          "Are you sure you want to cancel the order?",
+                          style: TextStyle(
+                            fontSize: 16.sp,
+                            color: ColorConstants.neutral600,
+                          ),
+                        ),
+                        actions: [
+                          TextButton(
+                            onPressed: () => Navigator.of(context).pop(false),
+                            child: const Text("No"),
+                          ),
+                          TextButton(
+                            onPressed: () => Navigator.of(context).pop(true),
+                            child: const Text("Yes"),
+                          ),
+                        ],
+                      ),
+                    );
+                    if (confirmCancel ?? false) {
+                      cartProvider.clearCart();
+                    }
                   },
                   child: Container(
                     padding:

@@ -19,10 +19,10 @@ class CheckoutScreen extends StatelessWidget {
             Image.asset(ImageConstants.congratulations),
             SizedBox(height: 20.h),
             Text(
-              'Your order has been placed and is on its way!',
-              style: TextStyle(
+              'Check email to proceed with payment',
+              style: GoogleFonts.lora(
                 fontSize: 20.sp,
-                fontWeight: FontWeight.bold,
+                fontWeight: FontWeight.w500,
                 color: ColorConstants.baseBlack,
               ),
               textAlign: TextAlign.center,
@@ -40,15 +40,14 @@ class CheckoutScreen extends StatelessWidget {
                 );
               },
               child: Container(
-                // width: 100,
-                padding: const EdgeInsets.symmetric(vertical: 10),
+                padding: EdgeInsets.symmetric(vertical: 12.h, horizontal: 12.w),
                 decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(16),
+                  borderRadius: BorderRadius.circular(10.r),
                   color: ColorConstants.green,
                 ),
                 child: Text(
                   "Continue shopping",
-                  style: GoogleFonts.inter(
+                  style: TextStyle(
                     fontSize: 16.sp,
                     fontWeight: FontWeight.w500,
                     color: ColorConstants.neutralWhite,

@@ -7,6 +7,7 @@ import 'package:timbu_v2/model/product.dart';
 import 'package:timbu_v2/screens/cart_screen.dart';
 import 'package:timbu_v2/util/constants/color_constants.dart';
 import 'package:timbu_v2/util/constants/image_constants.dart';
+import 'package:timbu_v2/util/widgets/add_to_wishlist_button.dart';
 
 class ProductDetail extends StatelessWidget {
   final Product product;
@@ -150,19 +151,11 @@ class ProductDetail extends StatelessWidget {
                       ),
                     ),
                   ),
-                  IconButton(
-                    onPressed: () {
-                      if (isInWishlist) {
-                        cartProvider.removeFromWishlist(product);
-                      } else {
-                        cartProvider.addToWishlist(product);
-                      }
-                    },
-                    icon: Icon(
-                      isInWishlist ? Icons.favorite : Icons.favorite_border,
-                      color: isInWishlist ? Colors.red : Colors.grey,
-                    ),
-                  ),
+                  AddToWishlistButton(
+                    isInWishlist: isInWishlist,
+                    cartProvider: cartProvider,
+                    product: product,
+                  )
                 ],
               ),
               SizedBox(
@@ -246,19 +239,11 @@ class ProductDetail extends StatelessWidget {
                         color: ColorConstants.baseBlack,
                       ),
                     ),
-                    IconButton(
-                      onPressed: () {
-                        if (isInWishlist) {
-                          cartProvider.removeFromWishlist(product);
-                        } else {
-                          cartProvider.addToWishlist(product);
-                        }
-                      },
-                      icon: Icon(
-                        isInWishlist ? Icons.favorite : Icons.favorite_border,
-                        color: isInWishlist ? Colors.red : Colors.grey,
-                      ),
-                    ),
+                    AddToWishlistButton(
+                      isInWishlist: isInWishlist,
+                      cartProvider: cartProvider,
+                      product: product,
+                    )
                   ],
                 ),
                 SizedBox(
@@ -281,90 +266,187 @@ class ProductDetail extends StatelessWidget {
 
   Widget buildBottomNavBar(BuildContext context) {
     final cartProvider = Provider.of<CartProvider>(context, listen: false);
+    final isInCart = cartProvider.getUserCartItems().contains(product);
 
     return BottomAppBar(
       height: 84.h,
       padding: EdgeInsets.symmetric(horizontal: 48.w, vertical: 12.h),
-      color: ColorConstants.green,
+      color: isInCart ? const Color(0xFFE4F5E0) : ColorConstants.green,
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: isInCart
+            ? addedToCartNavBar(cartProvider, context)
+            : notInCartNavBar(cartProvider, context),
+      ),
+    );
+  }
+
+  List<Widget> notInCartNavBar(
+      CartProvider cartProvider, BuildContext context) {
+    return [
+      Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                "Sub",
-                style: TextStyle(
-                  fontSize: 12.sp,
-                  color: ColorConstants.baseWhite,
-                ),
-              ),
-              Text(
-                "NGN ${product.currentPrice!.toStringAsFixed(0)}",
-                style: GoogleFonts.lora(
-                  fontSize: 18.sp,
-                  fontWeight: FontWeight.w600,
-                  color: ColorConstants.baseWhite,
-                ),
-              ),
-            ],
+          Text(
+            "Sub",
+            style: TextStyle(
+              fontSize: 12.sp,
+              color: ColorConstants.baseWhite,
+            ),
           ),
-          GestureDetector(
-            onTap: () {
-              cartProvider.addToCart(product);
-              showModalBottomSheet(
-                context: context,
-                builder: (context) => Container(
-                  padding: const EdgeInsets.all(24),
-                  child: RichText(
-                    text: TextSpan(
-                      children: [
-                        TextSpan(
-                          text: "${product.name} ",
-                          style: const TextStyle(
-                            color: ColorConstants.green,
-                          ),
-                        ),
-                        const TextSpan(
-                          text: "added to cart",
-                          style: TextStyle(
-                            color: ColorConstants.neutral600,
-                          ),
-                        )
-                      ],
-                      style: TextStyle(
-                        fontSize: 14.sp,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                  ),
-                ),
-                backgroundColor: ColorConstants.neutralWhite,
-              );
-            },
-            child: Container(
-              padding: EdgeInsets.symmetric(vertical: 12.5.h, horizontal: 43.w),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(3.82.r),
-                border: Border.all(
-                  color: ColorConstants.baseWhite,
-                  width: 2.w,
-                ),
-              ),
-              child: Text(
-                "Add to cart",
-                style: TextStyle(
-                  color: ColorConstants.baseWhite,
-                  fontSize: 11.45.sp,
-                  fontWeight: FontWeight.w400,
-                ),
-                textAlign: TextAlign.center,
-              ),
+          Text(
+            "NGN ${product.currentPrice!.toStringAsFixed(0)}",
+            style: GoogleFonts.lora(
+              fontSize: 18.sp,
+              fontWeight: FontWeight.w600,
+              color: ColorConstants.baseWhite,
             ),
           ),
         ],
       ),
-    );
+      GestureDetector(
+        onTap: () {
+          cartProvider.addToCart(product);
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              backgroundColor: ColorConstants.neutralWhite,
+              behavior: SnackBarBehavior.floating,
+              width: 250.w,
+              padding: EdgeInsets.all(15.w),
+              duration: Durations.long2,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10.r),
+                side: BorderSide(
+                  color: ColorConstants.grey600,
+                  width: 0.79.w,
+                ),
+              ),
+              content: Center(
+                child: RichText(
+                  text: TextSpan(
+                    children: [
+                      TextSpan(
+                        text: "${product.name} ",
+                        style: const TextStyle(
+                          color: ColorConstants.green,
+                        ),
+                      ),
+                      const TextSpan(
+                        text: "added to cart",
+                        style: TextStyle(
+                          color: ColorConstants.neutral600,
+                        ),
+                      )
+                    ],
+                    style: TextStyle(
+                      fontSize: 14.sp,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+              ),
+            ),
+          );
+        },
+        child: Container(
+          padding: EdgeInsets.symmetric(vertical: 12.5.h, horizontal: 43.w),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(3.82.r),
+            border: Border.all(
+              color: ColorConstants.baseWhite,
+              width: 2.w,
+            ),
+          ),
+          child: Text(
+            "Add to cart",
+            style: TextStyle(
+              color: ColorConstants.baseWhite,
+              fontSize: 11.45.sp,
+              fontWeight: FontWeight.w400,
+            ),
+            textAlign: TextAlign.center,
+          ),
+        ),
+      ),
+    ];
+  }
+
+  List<Widget> addedToCartNavBar(
+      CartProvider cartProvider, BuildContext context) {
+    return [
+      GestureDetector(
+        onTap: () {
+          cartProvider.removeFromCart(product);
+        },
+        child: Container(
+          width: 63.w,
+          height: 48.h,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(4.r),
+            border: Border.all(
+              width: 1.w,
+              color: ColorConstants.neutral800,
+            ),
+          ),
+          child: Center(
+            child: Text(
+              "Cancel",
+              style: GoogleFonts.inter(
+                fontSize: 14,
+                fontWeight: FontWeight.w500,
+                color: ColorConstants.neutral800,
+              ),
+            ),
+          ),
+        ),
+      ),
+      Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            "Unit Price",
+            style: TextStyle(
+              fontSize: 16.sp,
+              color: ColorConstants.neutral600,
+            ),
+          ),
+          Text(
+            "NGN ${product.currentPrice!.toStringAsFixed(0)}",
+            style: GoogleFonts.inter(
+              fontSize: 20.sp,
+              fontWeight: FontWeight.w600,
+              color: ColorConstants.neutral800,
+            ),
+          ),
+        ],
+      ),
+      GestureDetector(
+        onTap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => const CartScreen(),
+            ),
+          );
+        },
+        child: Container(
+          padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 10.5.h),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(6.r),
+            color: ColorConstants.green,
+          ),
+          child: Text(
+            "Checkout",
+            style: TextStyle(
+              fontSize: 18.sp,
+              fontWeight: FontWeight.w400,
+              color: ColorConstants.baseWhite,
+            ),
+          ),
+        ),
+      ),
+    ];
   }
 }

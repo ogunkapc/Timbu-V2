@@ -136,18 +136,21 @@ class EmptyCartScreen extends StatelessWidget {
                       child: ListView.builder(
                         scrollDirection: Axis.horizontal,
                         itemCount: recentlyViewedList.length,
-                        itemBuilder: (context, index) => ItemCard(
-                          product: recentlyViewedList[index],
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => ProductDetail(
-                                  product: recentlyViewedList[index],
+                        itemBuilder: (context, index) => Container(
+                          margin: EdgeInsets.only(right: 20.w),
+                          child: ItemCard(
+                            product: recentlyViewedList[index],
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => ProductDetail(
+                                    product: recentlyViewedList[index],
+                                  ),
                                 ),
-                              ),
-                            );
-                          },
+                              );
+                            },
+                          ),
                         ),
                       ),
                     ),
